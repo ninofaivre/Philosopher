@@ -33,40 +33,59 @@ void	eat(t_struct *s, int id)
 {
 	if (id % 2)
 	{
-		if (id == 1 && (s->n_philo % 2))
-			while (s->philo[s->n_philo - 1].n_eat < s->philo[id].n_eat || s->philo[0].n_eat < s->philo[id].n_eat);
-		pthread_mutex_lock(&s->philo[id - 1].fork);
-		message(s, id, "has taken a fork");
-		pthread_mutex_lock(&s->philo[id].fork);
-		message(s, id, "has taken a fork");
+		if (id == 1 && s->n_philo % 2)
+		{
+			pthread_mutex_lock(&s->philo[id].fork);
+			message(s, id, "has taken a fork");
+			pthread_mutex_lock(&s->philo[s->n_philo - 1].fork);
+			message(s, id, "has taken a fork");
+		}
+		else
+		{
+			pthread_mutex_lock(&s->philo[id - 1].fork);
+			message(s, id, "has taken a fork");
+			pthread_mutex_lock(&s->philo[id].fork);
+			message(s, id, "has taken a fork");
+		}
 		s->philo[id].last_eating_time = get_ms();
 		message(s, id, "is eating");
 		ft_usleep(s->time_to_eat);
-		pthread_mutex_unlock(&s->philo[id - 1].fork);
 		pthread_mutex_unlock(&s->philo[id].fork);
+		if (id == 1 && s->n_philo % 2)
+			pthread_mutex_unlock(&s->philo[s->n_philo - 1].fork);
+		else
+			pthread_mutex_unlock(&s->philo[id - 1].fork);
 	}
 	else
 	{
+		if (id == 0 && s->n_philo % 2)
+		{
+			pthread_mutex_lock(&s->philo[id + 1].fork);
+			message(s, id, "has taken a fork");
+		}
 		pthread_mutex_lock(&s->philo[id].fork);
 		message(s, id, "has taken a fork");
-		if (id == 0)
-			while (s->philo[1].n_eat < s->philo[id].n_eat || s->philo[s->n_philo - 1].n_eat < s->philo[id].n_eat);
-		else if (id == (s->n_philo - 1))
+		if (id != 0 || !(s->n_philo % 2))
 		{
-			while (s->philo[1].n_eat < s->philo[id].n_eat || s->philo[0].n_eat < s->philo[id].n_eat);
-			pthread_mutex_lock(&s->philo[0].fork);
+			if (id == (s->n_philo - 1))
+				pthread_mutex_lock(&s->philo[0].fork);
+			else
+				pthread_mutex_lock(&s->philo[id + 1].fork);
+			message(s, id, "has taken a fork");
 		}
-		else
-			pthread_mutex_lock(&s->philo[id + 1].fork);
-		message(s, id, "has taken a fork");
 		s->philo[id].last_eating_time = get_ms();
 		message(s, id, "is eating");
 		ft_usleep(s->time_to_eat);
-		pthread_mutex_unlock(&s->philo[id].fork);
-		if (id == (s->n_philo - 1))
-			pthread_mutex_unlock(&s->philo[0].fork);
-		else
+		if (id == 0 && s->n_philo % 2)
 			pthread_mutex_unlock(&s->philo[id + 1].fork);
+		pthread_mutex_unlock(&s->philo[id].fork);
+		if (id != 0 || !(s->n_philo % 2))
+		{
+			if (id == (s->n_philo - 1))
+				pthread_mutex_unlock(&s->philo[0].fork);
+			else
+				pthread_mutex_unlock(&s->philo[id + 1].fork);
+		}
 	}
 }
 
@@ -107,7 +126,7 @@ void	*ft_monitor(void *arg)
 			j = 0;
 		if ((get_ms() - s->philo[j].last_eating_time > s->time_to_die))
 		{
-			message(s, j, "died !");
+			message(s, j, "died");
 			s->end = true;
 		}
 		j++;
@@ -170,13 +189,23 @@ int		main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
+	pthread_attr_t tattr;
+	pthread_attr_init(&tattr);
+	pthread_attr_setdetachstate(&tattr,PTHREAD_CREATE_DETACHED);
 	s.start_time = get_ms();
 	while (i < s.n_philo)
 	{
-		pthread_create(&threads[i], NULL, &ft_philo, &s.philo[i]);
+		pthread_create(&threads[i], &tattr, &ft_philo, &s.philo[i]);
 		i++;
 	}
 	pthread_create(&monitor, NULL, &ft_monitor, &s);
 	pthread_join(monitor, (void *)&s);
 	pthread_mutex_destroy(&s.message);
+	i = 0;
+	while (i < s.n_philo)
+	{
+		pthread_mutex_destroy(&s.philo[i].fork);
+		i++;
+	}
+	free(s.philo);
 }
