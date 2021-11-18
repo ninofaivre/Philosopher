@@ -33,6 +33,8 @@ void	eat(t_struct *s, int id)
 {
 	if (id % 2)
 	{
+		if (id == 1 && (s->n_philo % 2))
+			while (s->philo[s->n_philo - 1].n_eat < s->philo[id].n_eat || s->philo[0].n_eat < s->philo[id].n_eat);
 		pthread_mutex_lock(&s->philo[id - 1].fork);
 		message(s, id, "has taken a fork");
 		pthread_mutex_lock(&s->philo[id].fork);
@@ -47,8 +49,13 @@ void	eat(t_struct *s, int id)
 	{
 		pthread_mutex_lock(&s->philo[id].fork);
 		message(s, id, "has taken a fork");
-		if (id == (s->n_philo - 1))
+		if (id == 0)
+			while (s->philo[1].n_eat < s->philo[id].n_eat || s->philo[s->n_philo - 1].n_eat < s->philo[id].n_eat);
+		else if (id == (s->n_philo - 1))
+		{
+			while (s->philo[1].n_eat < s->philo[id].n_eat || s->philo[0].n_eat < s->philo[id].n_eat);
 			pthread_mutex_lock(&s->philo[0].fork);
+		}
 		else
 			pthread_mutex_lock(&s->philo[id + 1].fork);
 		message(s, id, "has taken a fork");
@@ -98,11 +105,9 @@ void	*ft_monitor(void *arg)
 		}
 		if (j == s->n_philo)
 			j = 0;
-		if (get_ms() - s->philo[j].last_eating_time > s->time_to_die && s->philo->n_eat >= 1)
+		if ((get_ms() - s->philo[j].last_eating_time > s->time_to_die))
 		{
-			pthread_mutex_lock(&s->message);
-			printf("Philo %i died !\n", j);
-			pthread_mutex_unlock(&s->message);
+			message(s, j, "died !");
 			s->end = true;
 		}
 		j++;
@@ -159,7 +164,7 @@ int		main(int argc, char **argv)
 		pthread_mutex_init(&s.philo[i].fork, NULL);
 		pthread_mutex_unlock(&s.philo[i].fork);
 		s.philo[i].s = &s;
-		s.philo[i].last_eating_time = 0;
+		s.philo[i].last_eating_time = get_ms();
 		s.philo[i].n_eat = 0;
 		s.philo[i].id = i;
 		i++;
