@@ -8,10 +8,10 @@
 
 long long int	get_ms(void)
 {
-	static struct	timeval		tv;
+	struct	timeval		tv;
 
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	return (((tv.tv_sec * 1000) + (tv.tv_usec / 1000)));
 }
 
 void    ft_usleep(long long int ms)
@@ -19,11 +19,7 @@ void    ft_usleep(long long int ms)
 	long long int        ms_start;
 
 	ms_start = get_ms();
-	while (true)
-	{
-	   if ((get_ms() - ms_start) == ms)
-			break;
-	}
+	while ((get_ms() - ms_start) < ms);
 }
 
 void	message(t_struct *s, int id, char *str)
@@ -41,6 +37,7 @@ void	eat(t_struct *s, int id)
 		message(s, id, "has taken a fork");
 		pthread_mutex_lock(&s->philo[id].fork);
 		message(s, id, "has taken a fork");
+		s->philo[id].last_eating_time = get_ms();
 		message(s, id, "is eating");
 		ft_usleep(s->time_to_eat);
 		pthread_mutex_unlock(&s->philo[id - 1].fork);
@@ -55,8 +52,9 @@ void	eat(t_struct *s, int id)
 		else
 			pthread_mutex_lock(&s->philo[id + 1].fork);
 		message(s, id, "has taken a fork");
+		s->philo[id].last_eating_time = get_ms();
 		message(s, id, "is eating");
-		ft_usleep(200);
+		ft_usleep(s->time_to_eat);
 		pthread_mutex_unlock(&s->philo[id].fork);
 		if (id == (s->n_philo - 1))
 			pthread_mutex_unlock(&s->philo[0].fork);
@@ -80,8 +78,11 @@ void	*ft_monitor(void *arg)
 {
 	t_struct	*s;
 	int			i;
+	int			j;
+
 	s = (t_struct *)arg;
 	i = 0;
+	j = 0;
 	while (s->end == false)
 	{
 		if (s->n_eat != -1)
@@ -95,6 +96,16 @@ void	*ft_monitor(void *arg)
 				break ;
 			}
 		}
+		if (j == s->n_philo)
+			j = 0;
+		if (get_ms() - s->philo[j].last_eating_time > s->time_to_die && s->philo->n_eat >= 1)
+		{
+			pthread_mutex_lock(&s->message);
+			printf("Philo %i died !\n", j);
+			pthread_mutex_unlock(&s->message);
+			s->end = true;
+		}
+		j++;
 	}
 	return ((void *) NULL);
 }
@@ -108,9 +119,11 @@ void	*ft_philo(void *arg)
 	{
 		eat(philo->s, philo->id);
 		philo->n_eat++;
-		if (philo->s->end == false)
+		if (philo->s->end == true)
 			break ;
 		dodo(philo->s, philo->id);
+		if (philo->s->end == true)
+			break ;
 		think(philo->s, philo->id);
 	}
 	return ((void *) NULL);
@@ -130,7 +143,6 @@ int		main(int argc, char **argv)
 		exit(EXIT_SUCCESS);
 	}
 	s.end = false;
-	s.start_time = get_ms();
 	s.time_to_die = atoi(argv[2]);
 	s.time_to_eat = atoi(argv[3]);
 	s.time_to_sleep = atoi(argv[4]);
@@ -150,6 +162,12 @@ int		main(int argc, char **argv)
 		s.philo[i].last_eating_time = 0;
 		s.philo[i].n_eat = 0;
 		s.philo[i].id = i;
+		i++;
+	}
+	i = 0;
+	s.start_time = get_ms();
+	while (i < s.n_philo)
+	{
 		pthread_create(&threads[i], NULL, &ft_philo, &s.philo[i]);
 		i++;
 	}
