@@ -139,6 +139,7 @@ void	*ft_philo(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	while (philo->s->n_philo == 1 && philo->s->end == false);
 	while (philo->s->end == false)
 	{
 		eat(philo->s, philo->id);
