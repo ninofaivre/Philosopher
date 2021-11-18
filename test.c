@@ -6,42 +6,30 @@
 #include <unistd.h>
 #include "test.h"
 
-void    ft_usleep(long int ms)
+long long int	get_ms(void)
 {
-	static struct   timeval    tv;
-	long int        ms_start;
+	static struct	timeval		tv;
 
 	gettimeofday(&tv, NULL);
-	ms_start = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void    ft_usleep(long long int ms)
+{
+	long long int        ms_start;
+
+	ms_start = get_ms();
 	while (true)
 	{
-		gettimeofday(&tv, NULL);
-	   if ((((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - ms_start) == ms)
+	   if ((get_ms() - ms_start) == ms)
 			break;
 	}
-}
-
-void	put_one_number(int nbr)
-{
-	char	c;
-
-	c = (char)(nbr + 48);
-	write(1, &c, 1);
-}
-
-void	put_str(char *str)
-{
-	while (*str)
-		write(1, &(*str++), 1);
 }
 
 void	message(t_struct *s, int id, char *str)
 {
 	pthread_mutex_lock(&s->message);
-	put_one_number(id);
-	put_str(" ");
-	put_str(str);
-	put_str("\n");
+	printf("%lli %i %s\n", (get_ms() - s->start_time), id, str);
 	pthread_mutex_unlock(&s->message);
 }
 
@@ -88,15 +76,40 @@ void	dodo(t_struct *s, int id)
 	ft_usleep(s->time_to_sleep);
 }
 
+void	*ft_monitor(void *arg)
+{
+	t_struct	*s;
+	int			i;
+	s = (t_struct *)arg;
+	i = 0;
+	while (s->end == false)
+	{
+		if (s->n_eat != -1)
+		{
+			if (s->philo[i].n_eat < s->n_eat)
+				i = 0;
+			i++;
+			if (i == s->n_philo)
+			{
+				s->end = true;
+				break ;
+			}
+		}
+	}
+	return ((void *) NULL);
+}
+
 void	*ft_philo(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (true)
+	while (philo->s->end == false)
 	{
 		eat(philo->s, philo->id);
 		philo->n_eat++;
+		if (philo->s->end == false)
+			break ;
 		dodo(philo->s, philo->id);
 		think(philo->s, philo->id);
 	}
@@ -107,8 +120,8 @@ int		main(int argc, char **argv)
 {
 	int				i;
 	pthread_t		threads[atoi(argv[1])];
+	pthread_t		monitor;
 	t_struct		s;
-	static struct	timeval		tv;
 
 	i = 0;
 	if (argc < 5 || argc > 6)
@@ -116,8 +129,8 @@ int		main(int argc, char **argv)
 		printf("Error");
 		exit(EXIT_SUCCESS);
 	}
-	gettimeofday(&tv, NULL);
-	s.start_time = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	s.end = false;
+	s.start_time = get_ms();
 	s.time_to_die = atoi(argv[2]);
 	s.time_to_eat = atoi(argv[3]);
 	s.time_to_sleep = atoi(argv[4]);
@@ -140,10 +153,7 @@ int		main(int argc, char **argv)
 		pthread_create(&threads[i], NULL, &ft_philo, &s.philo[i]);
 		i++;
 	}
-	//pthread_join(un, (void *)&lol);
-	while (true)
-	{
-		(void)true;
-	}
+	pthread_create(&monitor, NULL, &ft_monitor, &s);
+	pthread_join(monitor, (void *)&s);
 	pthread_mutex_destroy(&s.message);
 }

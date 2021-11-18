@@ -9,6 +9,7 @@ typedef struct s_philo
 
 typedef struct s_struct
 {
+	bool			end;
 	long long int	start_time;
 	int				time_to_die;
 	int				time_to_eat;
