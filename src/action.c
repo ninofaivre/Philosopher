@@ -6,13 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:12:25 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 15:05:41 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 15:49:00 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	take_forks_even(t_env *env, int id)
+static void	take_forks_even(t_env *env, int id)
 {
 	if (id == 0 && env->n_philo % 2)
 		pthread_mutex_lock(&env->philo_data[id + 1].fork);
@@ -28,7 +28,7 @@ void	take_forks_even(t_env *env, int id)
 	message(env, id, "has taken a fork");
 }
 
-void	take_forks(t_env *env, int id)
+static void	take_forks(t_env *env, int id)
 {
 	if (id % 2)
 	{
@@ -47,7 +47,7 @@ void	take_forks(t_env *env, int id)
 		take_forks_even(env, id);
 }
 
-void	release_forks(t_env *env, int id)
+static void	release_forks(t_env *env, int id)
 {
 	if (id % 2)
 	{
@@ -74,7 +74,7 @@ void	release_forks(t_env *env, int id)
 void	eat(t_env *env, int id)
 {
 	take_forks(env, id);
-	env->philo_data[id].last_eating_time = get_ms();
+	env->philo_data[id].last_eat = get_ms();
 	message(env, id, "is eating");
 	env->philo_data[id].n_eat++;
 	msleep(env->time_to_eat);

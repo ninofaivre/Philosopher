@@ -6,13 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:15:30 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 15:05:46 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 15:11:26 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	*philo(void *arg)
+static void	*philo(void *arg)
 {
 	t_philo_data	*philo;
 

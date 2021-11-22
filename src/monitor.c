@@ -6,14 +6,13 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:16:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 15:00:55 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 15:49:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
-#include <stdio.h>
 
-void	*monitor_death(void *arg)
+static void	*monitor_death(void *arg)
 {
 	t_env	*env;
 	int		i;
@@ -24,7 +23,7 @@ void	*monitor_death(void *arg)
 		i = 0;
 		while (i < env->n_philo)
 		{
-			if ((get_ms() - env->philo_data[i].last_eating_time > env->time_to_die))
+			if ((get_ms() - env->philo_data[i].last_eat > env->time_to_die))
 			{
 				message(env, i, "died");
 				env->end = true;
@@ -35,7 +34,7 @@ void	*monitor_death(void *arg)
 	return ((void *) NULL);
 }
 
-void	*monitor_n_eat(void *arg)
+static void	*monitor_n_eat(void *arg)
 {
 	t_env	*env;
 	int		i;

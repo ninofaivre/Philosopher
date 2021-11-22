@@ -6,13 +6,12 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 14:57:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 15:12:48 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/time.h>
-#include <unistd.h>
 #include "header.h"
+#include <sys/time.h>
 #include <stdio.h>
 
 int	atoi_mod(char *str)

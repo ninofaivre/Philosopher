@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:21 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 14:59:09 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 15:49:00 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include "header.h"
 
-int	parsing(t_env *env, int argc, char **argv)
+static int	parsing(t_env *env, int argc, char **argv)
 {
 	if (argc < 5 || argc > 6)
 		return (-1);
@@ -37,7 +37,7 @@ int	parsing(t_env *env, int argc, char **argv)
 	return (0);
 }
 
-int	init(t_env *env, pthread_t **threads_philo)
+static int	init(t_env *env, pthread_t **threads_philo)
 {
 	int	i;
 
@@ -48,7 +48,8 @@ int	init(t_env *env, pthread_t **threads_philo)
 	env->end = false;
 	pthread_mutex_init(&env->message, NULL);
 	pthread_mutex_unlock(&env->message);
-	env->philo_data = (t_philo_data *)malloc(sizeof(t_philo_data) * env->n_philo);
+	env->philo_data = (t_philo_data *)
+		malloc(sizeof(t_philo_data) * env->n_philo);
 	if (!env->philo_data)
 		return (-1);
 	while (i < env->n_philo)
@@ -56,7 +57,7 @@ int	init(t_env *env, pthread_t **threads_philo)
 		pthread_mutex_init(&env->philo_data[i].fork, NULL);
 		pthread_mutex_unlock(&env->philo_data[i].fork);
 		env->philo_data[i].env = env;
-		env->philo_data[i].last_eating_time = get_ms();
+		env->philo_data[i].last_eat = get_ms();
 		env->philo_data[i].n_eat = 0;
 		env->philo_data[i].id = i;
 		i++;
@@ -65,7 +66,7 @@ int	init(t_env *env, pthread_t **threads_philo)
 	return (0);
 }
 
-void	clean(t_env *env, pthread_t *threads_philo)
+static void	clean(t_env *env, pthread_t *threads_philo)
 {
 	int	i;
 
