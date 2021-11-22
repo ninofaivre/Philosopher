@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:21 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 13:16:10 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 13:45:53 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,17 @@ int	init(t_struct *s, pthread_t **threads)
 	s->end = false;
 	pthread_mutex_init(&s->message, NULL);
 	pthread_mutex_unlock(&s->message);
-	s->philo = (t_philo *)malloc(sizeof(t_philo) * s->n_philo);
-	if (!s->philo)
+	s->philo_data = (t_philo_data *)malloc(sizeof(t_philo_data) * s->n_philo);
+	if (!s->philo_data)
 		return (-1);
 	while (i < s->n_philo)
 	{
-		pthread_mutex_init(&s->philo[i].fork, NULL);
-		pthread_mutex_unlock(&s->philo[i].fork);
-		s->philo[i].s = s;
-		s->philo[i].last_eating_time = get_ms();
-		s->philo[i].n_eat = 0;
-		s->philo[i].id = i;
+		pthread_mutex_init(&s->philo_data[i].fork, NULL);
+		pthread_mutex_unlock(&s->philo_data[i].fork);
+		s->philo_data[i].s = s;
+		s->philo_data[i].last_eating_time = get_ms();
+		s->philo_data[i].n_eat = 0;
+		s->philo_data[i].id = i;
 		i++;
 	}
 	s->start_time = get_ms();
@@ -73,11 +73,11 @@ void	clean(t_struct *s, pthread_t *threads)
 	pthread_mutex_destroy(&s->message);
 	while (i < s->n_philo)
 	{
-		pthread_mutex_destroy(&s->philo[i].fork);
+		pthread_mutex_destroy(&s->philo_data[i].fork);
 		i++;
 	}
 	free(threads);
-	free(s->philo);
+	free(s->philo_data);
 }
 
 int	main(int argc, char **argv)

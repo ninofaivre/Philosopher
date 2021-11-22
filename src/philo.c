@@ -6,24 +6,23 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:15:30 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 13:14:54 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 14:15:33 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-void	*ft_philo(void *arg)
+void	*philo(void *arg)
 {
-	t_philo	*philo;
+	t_philo_data	*philo;
 
-	philo = (t_philo *)arg;
+	philo = (t_philo_data *)arg;
 	while (philo->s->n_philo == 1 && philo->s->end == false)
 	{
 	}
 	while (philo->s->end == false)
 	{
 		eat(philo->s, philo->id);
-		philo->n_eat++;
 		if (philo->s->end == true)
 			break ;
 		dodo(philo->s, philo->id);
@@ -44,7 +43,7 @@ void	create_threads_philo(pthread_t *threads, t_struct *s)
 	pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_DETACHED);
 	while (i < s->n_philo)
 	{
-		pthread_create(&threads[i], &tattr, &ft_philo, &s->philo[i]);
+		pthread_create(&threads[i], &tattr, &philo, &s->philo_data[i]);
 		i++;
 	}
 }
