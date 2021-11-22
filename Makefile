@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/22 13:18:55 by nfaivre           #+#    #+#              #
-#    Updated: 2021/11/22 13:31:16 by nfaivre          ###   ########.fr        #
+#    Updated: 2021/11/22 13:35:25 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME = Philosopher
 
 CC = clang
-CFLAGS = -Wall -Werror -Wextra -lpthread
+CFLAGS = -Wall -Werror -Wextra
 
 DIR_SRC = src
 DIR_OBJ = .obj
@@ -30,7 +30,7 @@ $(DIR_OBJ)/%.o : $(DIR_SRC)/%.c ./include/header.h
 	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(GNL_OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) -lpthread $(OBJ) $(GNL_OBJ) -o $(NAME)
 
 all: $(OBJ) $(NAME)
 
