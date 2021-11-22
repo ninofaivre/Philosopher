@@ -6,12 +6,15 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:19:26 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/20 17:20:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 12:38:27 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HEADER_H
 # define HEADER_H
+
+# include <stdbool.h>
+# include <pthread.h>
 
 typedef struct s_philo
 {

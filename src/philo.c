@@ -6,9 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:15:30 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/20 17:19:04 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 13:14:54 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "header.h"
 
 void	*ft_philo(void *arg)
 {
@@ -27,7 +29,7 @@ void	*ft_philo(void *arg)
 		dodo(philo->s, philo->id);
 		if (philo->s->end == true)
 			break ;
-		think(philo->s, philo->id);
+		message(philo->s, philo->id, "is thinking");
 	}
 	return ((void *) NULL);
 }

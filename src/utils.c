@@ -6,9 +6,14 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/20 17:18:40 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 12:43:12 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <sys/time.h>
+#include <unistd.h>
+#include "header.h"
+#include <stdio.h>
 
 int	atoi_mod(char *str)
 {
@@ -44,4 +49,11 @@ void	msleep(long long int ms)
 	while ((get_ms() - ms_start) < ms)
 	{
 	}
+}
+
+void	message(t_struct *s, int id, char *str)
+{
+	pthread_mutex_lock(&s->message);
+	printf("%lli %i %s\n", (get_ms() - s->start_time), id, str);
+	pthread_mutex_unlock(&s->message);
 }

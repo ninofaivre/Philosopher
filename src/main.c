@@ -6,14 +6,11 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:21 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/20 17:18:18 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 13:16:10 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <sys/time.h>
-#include <stdbool.h>
-#include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "header.h"
