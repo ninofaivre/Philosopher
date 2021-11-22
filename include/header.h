@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:19:26 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 14:05:08 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 15:05:38 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@
 typedef struct s_philo_data
 {
 	pthread_mutex_t	fork;
-	struct s_struct	*s;
+	struct s_env	*env;
 	int				id;
 	long long int	last_eating_time;
 	int				n_eat;
 }	t_philo_data;
 
-typedef struct s_struct
+typedef struct s_env
 {
 	bool				end;
 	long long int		start_time;
@@ -36,20 +36,20 @@ typedef struct s_struct
 	int					n_philo;
 	pthread_mutex_t		message;
 	struct s_philo_data	*philo_data;
-}	t_struct;
+}	t_env;
 
 int				atoi_mod(char *str);
 long long int	get_ms(void);
 void			msleep(long long int ms);
 
-void			message(t_struct *s, int id, char *str);
-void			eat(t_struct *s, int id);
-void			think(t_struct *s, int id);
-void			dodo(t_struct *s, int id);
+void			message(t_env *env, int id, char *str);
+void			eat(t_env *env, int id);
+void			think(t_env *env, int id);
+void			slumber(t_env *env, int id);
 
-void			create_threads_philo(pthread_t *threads, t_struct *s);
+void			create_threads_philo(pthread_t *threads, t_env *env);
 void			*philo(void *arg);
 
-void			create_and_join_monitor(t_struct *s);
+void			create_and_join_monitor(t_env *env);
 
 #endif

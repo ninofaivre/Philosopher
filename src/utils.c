@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 13:51:05 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 14:57:40 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void	msleep(long long int ms)
 	}
 }
 
-void	message(t_struct *s, int id, char *str)
+void	message(t_env *env, int id, char *str)
 {
-	pthread_mutex_lock(&s->message);
-	if (s->end == false)
-		printf("%lli %i %s\n", (get_ms() - s->start_time), id, str);
-	pthread_mutex_unlock(&s->message);
+	pthread_mutex_lock(&env->message);
+	if (env->end == false)
+		printf("%lli %i %s\n", (get_ms() - env->start_time), id, str);
+	pthread_mutex_unlock(&env->message);
 }
