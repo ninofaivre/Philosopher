@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:15:30 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 14:15:33 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 14:49:05 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*philo(void *arg)
 	return ((void *) NULL);
 }
 
-void	create_threads_philo(pthread_t *threads, t_struct *s)
+void	create_threads_philo(pthread_t *threads_philo, t_struct *s)
 {
 	int				i;
 	pthread_attr_t	tattr;
@@ -43,7 +43,7 @@ void	create_threads_philo(pthread_t *threads, t_struct *s)
 	pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_DETACHED);
 	while (i < s->n_philo)
 	{
-		pthread_create(&threads[i], &tattr, &philo, &s->philo_data[i]);
+		pthread_create(&threads_philo[i], &tattr, &philo, &s->philo_data[i]);
 		i++;
 	}
 }

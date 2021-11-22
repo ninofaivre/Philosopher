@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:21 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 13:45:53 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 14:48:06 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ int	parsing(t_struct *s, int argc, char **argv)
 	return (0);
 }
 
-int	init(t_struct *s, pthread_t **threads)
+int	init(t_struct *s, pthread_t **threads_philo)
 {
 	int	i;
 
 	i = 0;
-	*threads = (pthread_t *)malloc(sizeof(pthread_t) * s->n_philo);
-	if (!threads)
+	*threads_philo = (pthread_t *)malloc(sizeof(pthread_t) * s->n_philo);
+	if (!threads_philo)
 		return (-1);
 	s->end = false;
 	pthread_mutex_init(&s->message, NULL);
@@ -65,7 +65,7 @@ int	init(t_struct *s, pthread_t **threads)
 	return (0);
 }
 
-void	clean(t_struct *s, pthread_t *threads)
+void	clean(t_struct *s, pthread_t *threads_philo)
 {
 	int	i;
 
@@ -76,22 +76,21 @@ void	clean(t_struct *s, pthread_t *threads)
 		pthread_mutex_destroy(&s->philo_data[i].fork);
 		i++;
 	}
-	free(threads);
+	free(threads_philo);
 	free(s->philo_data);
 }
 
 int	main(int argc, char **argv)
 {
-	pthread_t		*threads;
+	pthread_t		*threads_philo;
 	t_struct		s;
 
-	threads = NULL;
-	if (parsing(&s, argc, argv) == -1 || init(&s, &threads) == -1)
+	if (parsing(&s, argc, argv) == -1 || init(&s, &threads_philo) == -1)
 	{
 		write(2, "Error\n", 6);
 		exit(EXIT_FAILURE);
 	}
-	create_threads_philo(threads, &s);
+	create_threads_philo(threads_philo, &s);
 	create_and_join_monitor(&s);
-	clean(&s, threads);
+	clean(&s, threads_philo);
 }
