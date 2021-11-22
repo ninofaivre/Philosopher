@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:16:56 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 14:25:43 by nfaivre          ###   ########.fr       */
+/*   Updated: 2021/11/22 14:38:02 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,18 @@ void	*monitor_death(void *arg)
 	int			i;
 
 	s = (t_struct *)arg;
-	i = 0;
 	while (s->end == false)
 	{
-		while ()
-		if ((get_ms() - s->philo_data[i].last_eating_time > s->time_to_die))
+		i = 0;
+		while (i < s->n_philo)
 		{
-			s->end = true;
-			message(s, i, "died");
-			break ;
+			if ((get_ms() - s->philo_data[i].last_eating_time > s->time_to_die))
+			{
+				message(s, i, "died");
+				s->end = true;
+			}
+			i++;
 		}
-		i++;
-		if (i == s->n_philo)
-			i = 0;
 	}
 	return ((void *) NULL);
 }
@@ -45,10 +44,12 @@ void	*monitor_n_eat(void *arg)
 	while (s->end == false)
 	{
 		i = 0;
-		while (s->philo_data[i].n_eat >= s->n_eat && i < s->n_philo)
+		while (s->philo_data[i].n_eat >= s->n_eat)
+		{
 			i++;
-		if (i == s->n_philo)
-			s->end = true;
+			if (i == s->n_philo)
+				s->end = true;
+		}
 	}
 	return ((void *) NULL);
 }
