@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/22 13:18:55 by nfaivre           #+#    #+#              #
-#    Updated: 2021/11/22 13:39:50 by nfaivre          ###   ########.fr        #
+#    Updated: 2021/11/26 14:37:17 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ $(DIR_OBJ)/%.o : $(DIR_SRC)/%.c ./include/header.h
 	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -lpthread $(OBJ) $(GNL_OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) -lpthread $(OBJ) -o $(NAME)
 
 all: $(OBJ) $(NAME)
 
