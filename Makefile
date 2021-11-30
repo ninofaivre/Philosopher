@@ -6,7 +6,7 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/22 13:18:55 by nfaivre           #+#    #+#              #
-#    Updated: 2021/11/30 23:18:36 by nfaivre          ###   ########.fr        #
+#    Updated: 2021/11/30 23:23:35 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(NAME): $(OBJ)
 all: mkdir_DIR_OBJ $(OBJ) $(NAME)
 
 clean:
-	@rm -rf $(OBJ)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
