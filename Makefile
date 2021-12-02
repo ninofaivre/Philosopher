@@ -29,7 +29,6 @@ mkdir_DIR_OBJ:
 	mkdir -p $(DIR_OBJ)
 
 $(DIR_OBJ)/%.o : $(DIR_SRC)/%.c ./include/header.h
-	@mkdir -p $(DIR_OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $< $(INCLUDE)
 
 $(NAME):
