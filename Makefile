@@ -6,13 +6,13 @@
 #    By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/22 13:18:55 by nfaivre           #+#    #+#              #
-#    Updated: 2021/12/01 00:14:34 by nfaivre          ###   ########.fr        #
+#    Updated: 2021/12/02 15:11:35 by nfaivre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .DEFAULT_GOAL = all
 
-NAME = Philosopher
+NAME = philo
 
 CC = clang
 CFLAGS = -Wall -Werror -Wextra
