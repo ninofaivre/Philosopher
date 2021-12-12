@@ -54,6 +54,6 @@ void	message(t_env *env, int id, char *str)
 {
 	pthread_mutex_lock(&env->message);
 	if (env->end == false)
-		printf("%lli %i %s\n", (get_ms() - env->start_time), id, str);
+		printf("%lli %i %s\n", (get_ms() - env->start_time), (id + 1), str);
 	pthread_mutex_unlock(&env->message);
 }
