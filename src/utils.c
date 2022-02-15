@@ -6,7 +6,7 @@
 /*   By: nfaivre <nfaivre@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 17:09:08 by nfaivre           #+#    #+#             */
-/*   Updated: 2021/11/22 15:12:48 by nfaivre          ###   ########.fr       */
+/*   Updated: 2022/02/15 09:57:45 by nfaivre          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	msleep(long long int ms)
 void	message(t_env *env, int id, char *str)
 {
 	pthread_mutex_lock(&env->message);
+	if ((get_ms() - env->philo_data[id].last_eat) > env->time_to_die)
+		env->end = true;
 	if (env->end == false)
 		printf("%lli %i %s\n", (get_ms() - env->start_time), (id + 1), str);
 	pthread_mutex_unlock(&env->message);
